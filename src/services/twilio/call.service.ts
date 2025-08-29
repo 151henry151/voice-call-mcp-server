@@ -50,14 +50,11 @@ export class TwilioCallService {
         }
     }
 
-
     public async makeCall(twilioCallbackUrl: string, toNumber: string, callContext = ''): Promise<string> {
         try {
-            const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+            const callContextEncoded = encodeURIComponent(callContext);
 
-            const callContextEncoded =  encodeURIComponent(callContext);
-
-            const call = await twilioClient.calls.create({
+            const call = await this.twilioClient.calls.create({
                 to: toNumber,
                 from: process.env.TWILIO_NUMBER || '',
                 url: `${twilioCallbackUrl}/call/outgoing?apiSecret=${DYNAMIC_API_SECRET}&callType=outgoing&callContext=${callContextEncoded}`,
